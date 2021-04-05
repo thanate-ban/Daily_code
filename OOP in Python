@@ -1,0 +1,149 @@
+#Object-Oriented Programming in Python
+
+#Create Class
+class Employee:
+
+    # Class variable
+    num_of_emp = 0
+    raise_amount = 1.05
+
+    # Constructor
+    def __init__(self, first, last, salary):
+        self.firstName = first
+        self.lastName = last
+        self.salary = salary
+
+        Employee.num_of_emp += 1
+
+    # Property ( good for when we change some information such as firstname the email will change)
+    # When we call emp_1.email
+    @property
+    def email(self):
+        return '{}.{}@company.com'.format(self.first, self.lastName)
+
+    # Regular Method (Take instance as the first argument)
+    # When we call print(emp_1.fullname())
+    def fullname(self):
+        return '{} {}'.format(self.firstName, self.lastName)
+
+    # If change the regular Method to Property (Add @property)
+    # When we call print(emp_1.fullname)
+    @property
+    def fullname(self):
+        return '{} {}'.format(self.firstName, self.lastName)
+
+    # Setter
+    # When we call: emp_1.fullname = 'Top Kung'
+    # It will change the full name of emp_1 to Top Kung
+    @fullname.setter
+    def fullname(self, name):
+        first, last = name.split(' ')
+        self.firstName = first
+        self.lastName = last
+
+    # Deleter
+    # When we call: del emp_1
+    # It will delete emp_1
+    @fullname.deleter
+    def fullname(self):
+        print('Delete the Name Completely')
+        self.firstName = None
+        self.lastName = None
+
+    # Regular Method
+    def apply_raise(self):
+        self.salary = int(self.salary * self.raise_amount)
+
+    @classmethod
+    # Class Method (Pass the class instance as the first argument)
+    def set_raise_amount(cls, amount):
+        cls.raise_amount = amount
+
+    @staticmethod
+    # Static method (Pass the argument directly)
+    def is_workday(day):
+        # Weekday method (Monday = 0, ..., Sunday = 6)
+        if day.weekday() == 5 or day.weekday() == 6
+            return False
+        return True
+    #Operator
+    def __repr__(self):
+        return "Employee('{}', '{}', {})".format(self.firstName, self.lastName, self.salary)
+    #Operator
+    def __str__(self):
+        return '{} - {}'.format(self.fullname(), self.email)
+
+    """
+    Example of real code
+    @classmethod
+    def create_from_string(cls, emp_str):
+        first, last, salary = emp_str.split('-')
+        return cls(first, last, salary)
+
+    @classmethod
+    def fromTimeStamp(cls, t):
+        " Construct a date from a POSIX timestamp (like time.time())."
+        y, m, d, hh, mm, ss, weekday, jday, dst = _time.localtime(t)
+        return cls(y, m, d)
+
+    @classmethod
+    def today(cls):
+        t = _time.time()
+        return cls.fromTimeStamp(t)
+
+    @staticmethod
+    # Static method (Pass the argument directly)
+    def is_workday(day):
+        # Weekday method (Monday = 0, ..., Sunday = 6)
+        if day.weekday() == 5 or day.weekday() == 6
+            return False
+        return True
+    """
+
+# Subclass
+class Developer(Employee):
+
+    def __init__(self, first, last, salary, prog_lang):
+        super().__init__(first, last, salary)
+        self.prog_lang = prog_lang
+
+class Manager(Employee):
+
+    def __init__(self, first, last, salary, employees=None):
+        super().__init__(first, last, salary)
+        #or Employee.__init__(first, last. salary)
+        if employees is None:
+            self.employees = []
+        else:
+            self.employees = employees
+
+    def add_emp(self, emp):
+        if emp not in self.employees:
+            self.employees.append(emp)
+
+    def remove_emp(self, emp):
+        if emp in self.employees:
+            self.employees.remove(emp)
+    def print_emps(self):
+        for emp in self.employees:
+            print('-->', emp.fullname())
+
+
+
+#Console
+emp_1 = Employee('Corey', 'Schafer', 50000)
+emp_2 = Employee('Mike', 'Brown', 70000)
+print(emp_1.email)
+print(emp_1.fullname())
+
+emp_1.apply_raise()
+print(emp_1.raise_amount)
+
+Employee.set_raise_amount(1.07)
+
+emp_str1 = 'Corey-Schafer-50000'
+emp_str2 = 'Mike-Brown-70000'
+
+dev_1 = Developer('Corey', 'Schafer', 50000, 'Python')
+
+mgr_1 = Manager('Mike', 'Brown', 70000, [dev_1])
